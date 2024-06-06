@@ -1,8 +1,6 @@
 import 'package:easy_pos_app/widgets/is_available_switch.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -115,10 +113,11 @@ class _ProductsOpsState extends State<ProductsOpsPage> {
                   children: [
                     Expanded(
                       child: IsAvailableSwitch(
+                          // if the bool is nullable Convert nullable to non-nullable
                           value: isAvailable ?? false,
-                          onChanged: (value) {
+                          onChanged: (newValue) {
                             setState(() {
-                              isAvailable = value;
+                              isAvailable = newValue;
                             });
                           }),
                     ),
@@ -159,7 +158,7 @@ class _ProductsOpsState extends State<ProductsOpsPage> {
             'barcode': barcodeController.text,
             'image': imageController.text,
             'categoryId': selectedCategoryId,
-            'isAvaliable': isAvailable ?? false,
+            'isAvailable': isAvailable == true ? 1 : 0, //Convert boolean to int
           },
         );
       } else {
@@ -174,7 +173,7 @@ class _ProductsOpsState extends State<ProductsOpsPage> {
             'barcode': barcodeController.text,
             'image': imageController.text,
             'categoryId': selectedCategoryId,
-            'isAvaliable': isAvailable ?? false,
+            'isAvailable': isAvailable == true ? 1 : 0,
           },
           where: 'id =?',
           whereArgs: [widget.product?.id],

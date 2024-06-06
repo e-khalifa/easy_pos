@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class ListCard extends StatelessWidget {
   final String? name;
@@ -94,13 +95,15 @@ class ListCard extends StatelessWidget {
           child: ListTile(
             //Only show leading if there is an image
             leading: imageUrl != null
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image.network(
-                      imageUrl!,
+                ? CircleAvatar(
+                    radius: 40,
+                    backgroundImage: NetworkImage(imageUrl!),
+                    child: FadeInImage.memoryNetwork(
+                      placeholder: kTransparentImage,
+                      image: imageUrl!,
                       fit: BoxFit.cover,
                       width: double.infinity,
-                      height: 30,
+                      height: 100,
                     ),
                   )
                 : null,
@@ -115,9 +118,10 @@ class ListCard extends StatelessWidget {
 
             subtitle: imageUrl != null
                 ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Category $category',
+                        'Category: $category',
                         style: const TextStyle(fontSize: 12),
                       ),
                       Text(

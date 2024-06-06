@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class IsAvailableSwitch extends StatefulWidget {
-  var value;
+  bool value;
   final void Function(bool?)? onChanged;
 
   IsAvailableSwitch({super.key, required this.onChanged, required this.value});
@@ -27,7 +27,13 @@ class _IsAvailableSwitchState extends State<IsAvailableSwitch> {
           activeColor: Theme.of(context).primaryColor,
           inactiveTrackColor: Colors.grey.shade300,
           value: widget.value,
-          onChanged: widget.onChanged,
+          onChanged: (value) {
+            setState(() {
+              widget.value = value;
+              print('is Available? $value');
+            });
+            widget.onChanged!(value);
+          },
         ),
       ]),
     );

@@ -1,5 +1,7 @@
+import 'package:easy_pos_app/pages/categories_ops.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:route_transitions/route_transitions.dart';
 
 import '../helpers/sql_helper.dart';
 import '../models/category.dart';
@@ -42,10 +44,26 @@ class _CategoriesDropDownState extends State<CategoriesDropDown> {
   @override
   Widget build(BuildContext context) {
     try {
-      return Row(
-        children: [
-          Expanded(
-            child: Container(
+      return categories.isEmpty
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('No Categories Found, '),
+                InkWell(
+                  onTap: () {
+                    slideRightWidget(
+                        newPage: CategoriesOpsPage(), context: context);
+                  },
+                  child: Text(
+                    'Add A New One',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).primaryColor),
+                  ),
+                )
+              ],
+            )
+          : Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
                 border: Border.all(
@@ -70,10 +88,7 @@ class _CategoriesDropDownState extends State<CategoriesDropDown> {
                   ),
                 ),
               ),
-            ),
-          ),
-        ],
-      );
+            );
     } catch (e) {
       print('Error building CategoriesDropDown: $e');
       return const SizedBox.shrink(); // Return an empty box if there's an error
