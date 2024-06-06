@@ -41,35 +41,42 @@ class _CategoriesDropDownState extends State<CategoriesDropDown> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              border: Border.all(
-                color: Colors.black,
+    try {
+      return Row(
+        children: [
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(
+                  color: Colors.black,
+                ),
               ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-              child: DropdownButton(
-                  value: widget.selectedValue,
-                  isExpanded: true,
-                  underline: const SizedBox(),
-                  hint: const Text('Select Category'),
-                  items: [
-                    for (var category in categories)
-                      DropdownMenuItem(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<int>(
+                    value: widget.selectedValue,
+                    isExpanded: true,
+                    hint: const Text('Select Category'),
+                    items: categories.map((category) {
+                      return DropdownMenuItem<int>(
                         value: category.id,
                         child: Text(category.name ?? 'No Name'),
-                      ),
-                  ],
-                  onChanged: widget.onChanged),
+                      );
+                    }).toList(),
+                    onChanged: widget.onChanged,
+                  ),
+                ),
+              ),
             ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    } catch (e) {
+      print('Error building CategoriesDropDown: $e');
+      return const SizedBox.shrink(); // Return an empty box if there's an error
+    }
   }
 }
