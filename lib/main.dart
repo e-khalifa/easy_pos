@@ -27,7 +27,6 @@ class MyApp extends StatelessWidget {
             foregroundColor: Colors.white),
         iconTheme: const IconThemeData(color: Colors.white),
         colorScheme: ColorScheme.fromSwatch(
-          errorColor: Colors.red,
           backgroundColor: Colors.white,
         ),
       ),

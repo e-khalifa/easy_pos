@@ -1,3 +1,5 @@
+import 'package:easy_pos_app/pages/categories_list.dart';
+import 'package:easy_pos_app/pages/products_list.dart';
 import 'package:flutter/material.dart';
 import 'package:route_transitions/route_transitions.dart';
 import '../widgets/custom_grid_view_item.dart';
@@ -21,12 +23,12 @@ class _HomePageState extends State<HomePage> {
           Container(
               color: Theme.of(context).primaryColor,
               height: MediaQuery.of(context).size.height / 3,
-              child: Padding(
-                  padding: const EdgeInsets.all(20),
+              child: const Padding(
+                  padding: EdgeInsets.all(20),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Row(children: [
+                        Row(children: [
                           Text(
                             'Easy POS',
                             style: TextStyle(
@@ -37,12 +39,12 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ]),
 
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20),
                         //Calling headercard #2
                         HeaderCard(
                             label: 'Exchange Rate', value: '1EUR = 51.5 Egp'),
 
-                        const SizedBox(height: 10),
+                        SizedBox(height: 10),
 
                         HeaderCard(label: 'Today\'s Sales', value: '9000 Egp'),
                       ]))),
@@ -68,15 +70,16 @@ class _HomePageState extends State<HomePage> {
                     label: 'Products',
                     icon: Icons.inventory_2,
                     color: Colors.pink,
-                    onTap: () {},
+                    onTap: () {
+                      slideRightWidget(
+                          newPage: ProductsListPage(), context: context);
+                    },
                   ),
                   CustomGridViewItem(
                       label: 'Clients',
                       icon: Icons.groups,
                       color: Colors.lightBlue,
-                      onTap: () {
-                        slideRightWidget(newPage: HomePage(), context: context);
-                      }),
+                      onTap: () {}),
                   CustomGridViewItem(
                     label: 'New sale',
                     icon: Icons.point_of_sale,
@@ -87,7 +90,10 @@ class _HomePageState extends State<HomePage> {
                     label: 'Categories',
                     icon: Icons.category,
                     color: Colors.yellow,
-                    onTap: () {},
+                    onTap: () {
+                      slideRightWidget(
+                          newPage: CategoriesListPage(), context: context);
+                    },
                   ),
                   CustomGridViewItem(
                     label: 'Iventory',

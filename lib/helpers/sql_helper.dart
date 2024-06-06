@@ -60,7 +60,7 @@ class SqlHelper {
           stock INTEGER NOT NULL,
           image blob,
           categoryId INTEGER,
-          FOREIGN KEY (categoryId) REFERENCES categories(id)
+          FOREIGN KEY(categoryId) REFERENCES categories(id)
         )
       ''');
       print('Products table created.');
@@ -70,7 +70,7 @@ class SqlHelper {
         CREATE TABLE IF NOT EXISTS inventory (
           productId INTEGER PRIMARY KEY,
           quantity INTEGER NOT NULL,
-          FOREIGN KEY (productId) REFERENCES products(id)
+          FOREIGN KEY(productId) REFERENCES products(id)
        )
       ''');
       print('Iventory table created.');
@@ -93,7 +93,7 @@ class SqlHelper {
           saleDate TEXT NOT NULL,
           totalAmount DOUBLE NOT NULL,
           customerId INTEGER,
-          FOREIGN KEY (customerId) REFERENCES customers(id)
+          FOREIGN KEY(customerId) REFERENCES customers(id)
         )
       ''');
       print('Sales table created.');

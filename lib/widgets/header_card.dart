@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class HeaderCard extends StatelessWidget {
-  String label;
-  String value;
-  HeaderCard({super.key, required this.label, required this.value});
+  final String label;
+  final String value;
+  const HeaderCard({super.key, required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
