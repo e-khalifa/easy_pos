@@ -38,7 +38,12 @@ class _ProductsListPageState extends State<ProductsListPage> {
   //mapping data to list
   Future<void> getProducts() async {
     try {
-      var data = await sqlHelper.db!.query('products');
+      var data = await sqlHelper.db!.rawQuery("""
+        Select P.*,C.name as categoryName from products P
+        Inner JOIN categories C
+        On P.categoryId = C.id
+      """);
+
       if (data.isNotEmpty) {
         products = data.map((item) => Product.fromJson(item)).toList();
       } else {
@@ -85,13 +90,11 @@ class _ProductsListPageState extends State<ProductsListPage> {
                       return;
                     }
 
-                    //search the data for the text provided
+                    //search the data (name/desciption/barcode) for the text provided
                     final data = await sqlHelper.db!.rawQuery('''
                       SELECT * FROM products 
                       WHERE name LIKE '%$text%'
                       OR description LIKE '%$text%'
-                      OR price LIKE '%$text%'
-                      OR stock LIKE '%$text%'
                       OR barcode LIKE '%$text%'
                     ''');
 

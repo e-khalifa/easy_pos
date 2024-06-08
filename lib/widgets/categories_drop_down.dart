@@ -50,9 +50,13 @@ class _CategoriesDropDownState extends State<CategoriesDropDown> {
               children: [
                 Text('No Categories Found, '),
                 InkWell(
-                  onTap: () {
-                    slideRightWidget(
-                        newPage: CategoriesOpsPage(), context: context);
+                  //updating the categories right away
+                  onTap: () async {
+                    var updated = await pushWidgetAwait(
+                        newPage: const CategoriesOpsPage(), context: context);
+                    if (updated == true) {
+                      getCategories();
+                    }
                   },
                   child: Text(
                     'Add A New One',

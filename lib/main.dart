@@ -4,6 +4,12 @@ import 'package:get_it/get_it.dart';
 import 'helpers/sql_helper.dart';
 import 'pages/home.dart';
 
+/*in progress: - product list page ui
+               - the editing/updating part:
+                                         1 - it doesn't display right away
+                                         2 - some of the product fields are empty in editing form
+*/
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   var sqlHelper = SqlHelper();

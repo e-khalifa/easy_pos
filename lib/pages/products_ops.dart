@@ -33,19 +33,24 @@ class _ProductsOpsState extends State<ProductsOpsPage> {
 
   @override
   void initState() {
-    super.initState();
-    if (widget.product != null) {
-      // Setting initial values for editing an existing product
-      nameController.text = widget.product!.name!;
-      descriptionController.text = widget.product!.description!;
-      priceController.text = '${widget.product?.price ?? ''}';
-      barcodeController.text = widget.product!.barcode!;
-      stockController.text = '${widget.product?.stock ?? ''}';
-      imageController.text = widget.product!.image!;
+    try {
+      if (widget.product != null) {
+        // Setting initial values for editing an existing product
+        nameController.text = widget.product!.name!;
+        descriptionController.text = widget.product!.description!;
+        priceController.text = '${widget.product?.price ?? ''}';
+        barcodeController.text = widget.product!.barcode!;
+        stockController.text = '${widget.product?.stock ?? ''}';
+        imageController.text = widget.product!.image!;
 
-      isAvailable = widget.product?.isAvailable;
-      selectedCategoryId = widget.product?.categoryId;
+        isAvailable = widget.product?.isAvailable;
+        selectedCategoryId = widget.product?.categoryId;
+      }
+    } catch (e) {
+      // Handle the error
+      print('An error occurredi in edditing product: $e');
     }
+    super.initState();
   }
 
   @override
@@ -144,56 +149,61 @@ class _ProductsOpsState extends State<ProductsOpsPage> {
 
   //if the controllers are empty, add a new product, if it's not, update
   Future<void> onSubmittedProduct() async {
-    if (formKey.currentState!.validate()) {
-      if (widget.product == null) {
-        // Add a new product
-        await sqlHelper.db!.insert(
-          'products',
-          conflictAlgorithm: ConflictAlgorithm.replace,
-          {
-            'name': nameController.text,
-            'description': descriptionController.text,
-            'price': double.parse(priceController.text),
-            'stock': int.parse(stockController.text),
-            'barcode': barcodeController.text,
-            'image': imageController.text,
-            'categoryId': selectedCategoryId,
-            'isAvailable': isAvailable == true ? 1 : 0, //Convert boolean to int
-          },
-        );
-      } else {
-        // Update an existing product
-        await sqlHelper.db!.update(
-          'products',
-          {
-            'name': nameController.text,
-            'description': descriptionController.text,
-            'price': double.parse(priceController.text),
-            'stock': int.parse(stockController.text),
-            'barcode': barcodeController.text,
-            'image': imageController.text,
-            'categoryId': selectedCategoryId,
-            'isAvailable': isAvailable == true ? 1 : 0,
-          },
-          where: 'id =?',
-          whereArgs: [widget.product?.id],
-        );
-      }
+    try {
+      if (formKey.currentState!.validate()) {
+        if (widget.product == null) {
+          // Add a new product
+          await sqlHelper.db!.insert(
+            'products',
+            conflictAlgorithm: ConflictAlgorithm.replace,
+            {
+              'name': nameController.text,
+              'description': descriptionController.text,
+              'price': double.parse(priceController.text),
+              'stock': int.parse(stockController.text),
+              'barcode': barcodeController.text,
+              'image': imageController.text,
+              'categoryId': selectedCategoryId,
+              'isAvailable':
+                  isAvailable == true ? 1 : 0, //Convert boolean to int
+            },
+          );
+        } else {
+          // Update an existing product
+          await sqlHelper.db!.update(
+            'products',
+            {
+              'name': nameController.text,
+              'description': descriptionController.text,
+              'price': double.parse(priceController.text),
+              'stock': int.parse(stockController.text),
+              'barcode': barcodeController.text,
+              'image': imageController.text,
+              'categoryId': selectedCategoryId,
+              'isAvailable': isAvailable == true ? 1 : 0,
+            },
+            where: 'id =?',
+            whereArgs: [widget.product?.id],
+          );
+        }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.green,
-          content: Text(
-            widget.product == null
-                ? 'Product added Successfully!'
-                : 'Product Updated Successfully!',
-            textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.white),
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.green,
+            content: Text(
+              widget.product == null
+                  ? 'Product added Successfully!'
+                  : 'Product Updated Successfully!',
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.white),
+            ),
           ),
-        ),
-      );
-      //updated ones don't appear immediately after editing?
-      Navigator.pop(context, true);
+        );
+        //updated ones don't appear immediately after editing?
+        Navigator.pop(context, true);
+      }
+    } catch (e) {
+      print('An error occurred in onSubmittedProduct: $e');
     }
   }
 }

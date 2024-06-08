@@ -61,6 +61,7 @@ class SqlHelper {
           image blob,
           categoryId INTEGER,
           FOREIGN KEY(categoryId) REFERENCES categories(id)
+          ON Delete restrict
         )
       ''');
       print('Products table created.');

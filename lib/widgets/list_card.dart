@@ -95,15 +95,15 @@ class ListCard extends StatelessWidget {
           child: ListTile(
             //Only show leading if there is an image
             leading: imageUrl != null
-                ? CircleAvatar(
-                    radius: 40,
-                    backgroundImage: NetworkImage(imageUrl!),
-                    child: FadeInImage.memoryNetwork(
-                      placeholder: kTransparentImage,
-                      image: imageUrl!,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      height: 100,
+                ? Container(
+                    width: 100,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        fit: BoxFit.contain,
+                        image: NetworkImage(imageUrl!),
+                      ),
                     ),
                   )
                 : null,
