@@ -1,7 +1,7 @@
 # Easy POS APP
 
 <div>
-<img src="https://github.com/e-khalifa/employee_manager_app/blob/main/assets/images/em.gif">
+<img src="https://github.com/e-khalifa/easy_pos/blob/main/assets/EasyPosAPP.gif">
 <div>
 
 <div>
