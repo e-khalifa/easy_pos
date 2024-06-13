@@ -4,21 +4,21 @@ import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../helpers/sql_helper.dart';
-import '../models/product.dart';
-import '../widgets/app_elevated_button.dart';
-import '../widgets/app_text_field.dart';
-import '../widgets/categories_drop_down.dart';
+import '../../helpers/sql_helper.dart';
+import '../../models/product.dart';
+import '../../widgets/app_elevated_button.dart';
+import '../../widgets/app_text_field.dart';
+import '../../widgets/categories_drop_down.dart';
 
 class ProductsOpsPage extends StatefulWidget {
   final Product? product;
   const ProductsOpsPage({this.product, super.key});
 
   @override
-  State<ProductsOpsPage> createState() => _ProductsOpsState();
+  State<ProductsOpsPage> createState() => _ProductsOpsPageState();
 }
 
-class _ProductsOpsState extends State<ProductsOpsPage> {
+class _ProductsOpsPageState extends State<ProductsOpsPage> {
   var sqlHelper = GetIt.I.get<SqlHelper>();
 
   var formKey = GlobalKey<FormState>();

@@ -30,7 +30,7 @@ class _IsAvailableSwitchState extends State<IsAvailableSwitch> {
           onChanged: (value) {
             setState(() {
               widget.value = value;
-              print('is Available? $value');
+              print('Is Product Available? $value');
             });
             widget.onChanged!(value);
           },

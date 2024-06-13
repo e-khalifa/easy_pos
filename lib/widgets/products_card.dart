@@ -1,24 +1,27 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-class ListCard extends StatelessWidget {
+class ProductCard extends StatelessWidget {
   final String? name;
   final String? description;
+  final String? category;
+  final double? price;
+  final int? stock;
+  final String? imageUrl;
+
   Future<void> Function() onDeleted;
   void Function()? onEdit;
 
-  final String? phone;
-  final String? address;
-  final String? email;
-
-  ListCard({
+  ProductCard({
     super.key,
     required this.name,
-    required this.description,
+    this.description,
     required this.onDeleted,
     required this.onEdit,
-    this.phone,
-    this.address,
-    this.email,
+    required this.category,
+    required this.price,
+    required this.stock,
+    this.imageUrl,
   });
 
   @override
@@ -90,6 +93,13 @@ class ListCard extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: ListTile(
+            //Only show leading if there is an image
+            leading: CachedNetworkImage(
+              imageUrl: imageUrl ?? '',
+              placeholder: (context, url) => CircularProgressIndicator(),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+            ),
+
             title: Text(
               name!,
               style: const TextStyle(
@@ -97,10 +107,29 @@ class ListCard extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            subtitle: Text(
-              description!,
-              style: const TextStyle(fontSize: 14),
+
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Category: $category',
+                  style: const TextStyle(fontSize: 12),
+                ),
+                Text(
+                  description!,
+                  style: const TextStyle(fontSize: 14),
+                ),
+                Divider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Price: $price EGP'),
+                    Text('In Stock: $stock')
+                  ],
+                ),
+              ],
             ),
+
             trailing: IconButton(
               onPressed: onEdit,
               icon: Icon(Icons.edit),

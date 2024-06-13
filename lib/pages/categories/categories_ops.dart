@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../helpers/sql_helper.dart';
-import '../models/category.dart';
-import '../widgets/app_elevated_button.dart';
-import '../widgets/app_text_field.dart';
+import '../../helpers/sql_helper.dart';
+import '../../models/category.dart';
+import '../../widgets/app_elevated_button.dart';
+import '../../widgets/app_text_field.dart';
 
 class CategoriesOpsPage extends StatefulWidget {
   final Category? category;
   const CategoriesOpsPage({this.category, super.key});
 
   @override
-  State<CategoriesOpsPage> createState() => _CategoriesOpsState();
+  State<CategoriesOpsPage> createState() => _CategoriesOpsPageState();
 }
 
-class _CategoriesOpsState extends State<CategoriesOpsPage> {
+class _CategoriesOpsPageState extends State<CategoriesOpsPage> {
   var sqlHelper = GetIt.I.get<SqlHelper>();
 
   var formKey = GlobalKey<FormState>();

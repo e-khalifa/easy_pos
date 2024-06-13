@@ -79,10 +79,11 @@ class SqlHelper {
       // Customers table
       batch.execute('''
         CREATE TABLE IF NOT EXISTS customers(
+          id INTEGER PRIMARY KEY,
           name TEXT NOT NULL,
-          email TEXT NOT NULL,
           phone TEXT NOT NULL,
-          address TEXT NOT NULL
+          address TEXT NOT NULL,
+          email TEXT NOT NULL
         )
       ''');
       print('Customers table created.');

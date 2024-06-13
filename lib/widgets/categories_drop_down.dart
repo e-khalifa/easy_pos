@@ -1,4 +1,4 @@
-import 'package:easy_pos_app/pages/categories_ops.dart';
+import 'package:easy_pos_app/pages/categories/categories_ops.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:route_transitions/route_transitions.dart';
