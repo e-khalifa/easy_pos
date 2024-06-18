@@ -6,9 +6,12 @@ class AppTextField extends StatelessWidget {
   final TextEditingController? controller;
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
+  final String? Function(String?)? validator;
+
   const AppTextField(
       {required this.label,
       required this.controller,
+      this.validator,
       this.keyboardType,
       this.inputFormatters,
       super.key});
@@ -19,11 +22,20 @@ class AppTextField extends StatelessWidget {
       controller: controller,
       inputFormatters: inputFormatters,
       keyboardType: keyboardType,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: validator,
       decoration: InputDecoration(
+        contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 22),
         border: OutlineInputBorder(
           borderSide: BorderSide(
             width: 2,
             color: Theme.of(context).primaryColor,
+          ),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            width: 2,
+            color: Colors.red,
           ),
         ),
         enabledBorder: const OutlineInputBorder(),
@@ -34,13 +46,8 @@ class AppTextField extends StatelessWidget {
           ),
         ),
         labelText: label,
+        errorStyle: TextStyle(color: Colors.red),
       ),
-      validator: (value) {
-        if (value!.isEmpty) {
-          return 'This field is required';
-        }
-        return null;
-      },
     );
   }
 }

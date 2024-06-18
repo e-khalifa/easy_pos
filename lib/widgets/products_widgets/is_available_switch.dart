@@ -19,7 +19,7 @@ class _IsAvailableSwitchState extends State<IsAvailableSwitch> {
         color: Colors.transparent,
         border: Border.all(color: Colors.black),
       ),
-      padding: const EdgeInsets.only(right: 5, left: 12, bottom: 8, top: 8),
+      padding: const EdgeInsets.only(right: 5, left: 12, bottom: 9, top: 9),
       child: Row(children: [
         Text('Is Product Available?'),
         SizedBox(width: 5),

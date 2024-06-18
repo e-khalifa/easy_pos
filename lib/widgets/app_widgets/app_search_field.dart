@@ -17,10 +17,13 @@ class _AppSearchFieldState extends State<AppSearchField> {
       decoration: InputDecoration(
         prefixIcon: const Icon(Icons.search),
         labelText: 'Search',
-        border: const OutlineInputBorder(),
-        enabledBorder: const OutlineInputBorder(),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(10),
+        ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Theme.of(context).primaryColor),
+          borderRadius: BorderRadius.circular(10),
         ),
       ),
     );

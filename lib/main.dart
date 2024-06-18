@@ -8,6 +8,10 @@ import 'pages/home.dart';
                - the editing/updating part:
                                          1 - it doesn't display right away
                                          2 - some of the product fields are empty in editing form
+                                         3 - it says product saved if you checked all the required fields on product,
+                                           but there isn't categories, it just say it's added, it doesn't really add,
+                                           it should display error
+                                         4 - 
 */
 
 void main() async {

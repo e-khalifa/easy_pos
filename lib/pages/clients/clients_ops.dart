@@ -5,8 +5,8 @@ import 'package:sqflite/sqflite.dart';
 
 import '../../helpers/sql_helper.dart';
 import '../../models/client.dart';
-import '../../widgets/app_elevated_button.dart';
-import '../../widgets/app_text_field.dart';
+import '../../widgets/app_widgets/app_elevated_button.dart';
+import '../../widgets/app_widgets/app_text_field.dart';
 
 class ClientsOpsPage extends StatefulWidget {
   final Client? client;
@@ -49,7 +49,16 @@ class _ClientsOpsPageState extends State<ClientsOpsPage> {
           key: formKey,
           child: Column(
             children: [
-              AppTextField(label: 'Name', controller: nameController),
+              AppTextField(
+                label: 'Name',
+                controller: nameController,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'This Field is required';
+                  }
+                  return null;
+                },
+              ),
               const SizedBox(height: 20),
               AppTextField(
                 label: 'phone',
@@ -58,6 +67,16 @@ class _ClientsOpsPageState extends State<ClientsOpsPage> {
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
                 ],
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'This Field is required';
+                  }
+                  if (!RegExp(r'^\d{11}$').hasMatch(value)) {
+                    return 'Please enter a valid 11-digit phone number';
+                  }
+
+                  return null;
+                },
               ),
               const SizedBox(height: 20),
               AppTextField(label: 'address', controller: addressController),
@@ -82,7 +101,7 @@ class _ClientsOpsPageState extends State<ClientsOpsPage> {
       if (widget.client == null) {
         // Adding a new client
         await sqlHelper.db!.insert(
-          'customers',
+          'clients',
           conflictAlgorithm: ConflictAlgorithm.replace,
           {
             'name': nameController.text,
@@ -94,7 +113,7 @@ class _ClientsOpsPageState extends State<ClientsOpsPage> {
       } else {
         // Updating an existing client
         await sqlHelper.db!.update(
-          'customers',
+          'clients',
           {
             'name': nameController.text,
             'phone': phoneController.text,

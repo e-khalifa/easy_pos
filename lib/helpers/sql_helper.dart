@@ -32,7 +32,7 @@ class SqlHelper {
                      1- Categories
                      2- Products
                      3- Iventory
-                     4- Customers
+                     4- Clients
                      5- Sales*/
   Future<bool> createTables() async {
     try {
@@ -43,7 +43,7 @@ class SqlHelper {
         CREATE TABLE IF NOT EXISTS categories(
           id INTEGER PRIMARY KEY,
           name TEXT NOT NULL,
-          description TEXT NOT NULL
+          description TEXT
         )
       ''');
       print('Categories table created.');
@@ -53,12 +53,12 @@ class SqlHelper {
         CREATE TABLE IF NOT EXISTS products(
           id INTEGER PRIMARY KEY,
           name TEXT NOT NULL,
-          description TEXT NOT NULL,
+          description TEXT,
           price DOUBLE NOT NULL,
-          barcode TEXT NOT NULL,
+          barcode TEXT,
           isAvailable BOOLEAN,
           stock INTEGER NOT NULL,
-          image blob,
+          image TEXT NoT NULL,
           categoryId INTEGER,
           FOREIGN KEY(categoryId) REFERENCES categories(id)
           ON Delete restrict
@@ -76,17 +76,17 @@ class SqlHelper {
       ''');
       print('Iventory table created.');
 
-      // Customers table
+      // Clients table
       batch.execute('''
-        CREATE TABLE IF NOT EXISTS customers(
+        CREATE TABLE IF NOT EXISTS clients(
           id INTEGER PRIMARY KEY,
           name TEXT NOT NULL,
           phone TEXT NOT NULL,
-          address TEXT NOT NULL,
-          email TEXT NOT NULL
+          address TEXT,
+          email TEXT
         )
       ''');
-      print('Customers table created.');
+      print('Clients table created.');
 
       // Sales table
       batch.execute('''
@@ -94,8 +94,8 @@ class SqlHelper {
           id INTEGER PRIMARY KEY,
           saleDate TEXT NOT NULL,
           totalAmount DOUBLE NOT NULL,
-          customerId INTEGER,
-          FOREIGN KEY(customerId) REFERENCES customers(id)
+          clientId INTEGER,
+          FOREIGN KEY(clientId) REFERENCES clients(id)
         )
       ''');
       print('Sales table created.');

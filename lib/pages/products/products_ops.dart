@@ -1,4 +1,4 @@
-import 'package:easy_pos_app/widgets/is_available_switch.dart';
+import 'package:easy_pos_app/widgets/products_widgets/is_available_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
@@ -6,9 +6,9 @@ import 'package:sqflite/sqflite.dart';
 
 import '../../helpers/sql_helper.dart';
 import '../../models/product.dart';
-import '../../widgets/app_elevated_button.dart';
-import '../../widgets/app_text_field.dart';
-import '../../widgets/categories_drop_down.dart';
+import '../../widgets/app_widgets/app_elevated_button.dart';
+import '../../widgets/app_widgets/app_text_field.dart';
+import '../../widgets/products_widgets/categories_drop_down.dart';
 
 class ProductsOpsPage extends StatefulWidget {
   final Product? product;
@@ -28,6 +28,7 @@ class _ProductsOpsPageState extends State<ProductsOpsPage> {
   final barcodeController = TextEditingController();
   final stockController = TextEditingController();
   final imageController = TextEditingController();
+  final categoryDropdownSearchController = TextEditingController();
   bool? isAvailable;
   int? selectedCategoryId;
 
@@ -66,23 +67,39 @@ class _ProductsOpsPageState extends State<ProductsOpsPage> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                AppTextField(label: 'Product Name', controller: nameController),
+                AppTextField(
+                  label: 'Product Name',
+                  controller: nameController,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'This Field is required';
+                    }
+                    return null;
+                  },
+                ),
                 const SizedBox(height: 20),
                 AppTextField(
                     label: 'Description', controller: descriptionController),
                 const SizedBox(height: 20),
                 //Calling categories drop down menu
                 CategoriesDropDown(
-                  selectedValue: selectedCategoryId,
-                  onChanged: (value) {
-                    selectedCategoryId = value;
-                    setState(() {});
-                  },
-                ),
+                    selectedValue: selectedCategoryId,
+                    onChanged: (value) {
+                      selectedCategoryId = value;
+                      setState(() {});
+                    },
+                    categorySearchController: categoryDropdownSearchController,
+                    validator: (selectedValue) {
+                      if (selectedValue == null) {
+                        return 'Please select a category';
+                      }
+                      return null;
+                    }),
                 const SizedBox(height: 20),
                 AppTextField(
-                    label: 'Add your image URL here',
-                    controller: imageController),
+                  label: 'Add your image URL here',
+                  controller: imageController,
+                ),
                 const SizedBox(height: 20),
                 Row(
                   children: [
@@ -94,6 +111,12 @@ class _ProductsOpsPageState extends State<ProductsOpsPage> {
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                         ],
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'This Field is required';
+                          }
+                          return null;
+                        },
                       ),
                     ),
                     SizedBox(
@@ -107,6 +130,12 @@ class _ProductsOpsPageState extends State<ProductsOpsPage> {
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                         ],
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'This Field is required';
+                          }
+                          return null;
+                        },
                       ),
                     ),
                   ],
@@ -129,7 +158,9 @@ class _ProductsOpsPageState extends State<ProductsOpsPage> {
                     SizedBox(width: 10),
                     Expanded(
                       child: AppTextField(
-                          label: 'Barcode', controller: barcodeController),
+                        label: 'Barcode',
+                        controller: barcodeController,
+                      ),
                     ),
                   ],
                 ),

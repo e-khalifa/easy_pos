@@ -1,4 +1,4 @@
-import 'package:easy_pos_app/widgets/app_search_field.dart';
+import 'package:easy_pos_app/widgets/app_widgets/app_search_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:route_transitions/route_transitions.dart';
@@ -28,7 +28,7 @@ class _ClientsListPageState extends State<ClientsListPage> {
   //mapping data to list
   Future<void> getClients() async {
     try {
-      var data = await sqlHelper.db!.query('customers');
+      var data = await sqlHelper.db!.query('clients');
       if (data.isNotEmpty) {
         clients = data.map((item) => Client.fromJson(item)).toList();
       } else {
@@ -81,8 +81,10 @@ class _ClientsListPageState extends State<ClientsListPage> {
 
                         //search the data for the text provided
                         final data = await sqlHelper.db!.rawQuery('''
-                      SELECT * FROM customers 
-                      WHERE name LIKE '%$text%' OR address LIKE '%$text%' OR email LIKE '$text'
+                      SELECT * FROM clients 
+                      WHERE name LIKE '%$text%'
+                      OR address LIKE '%$text%'
+                      OR email LIKE '$text'
                     ''');
 
                         //if anything related found, map it to a list
@@ -110,14 +112,36 @@ class _ClientsListPageState extends State<ClientsListPage> {
 
                             //caling listcard
                             return ListCard(
-                                name: client.name,
-                                description: client.phone,
-                                onDeleted: () => onDeleteClient(client),
-                                onEdit: () {
-                                  slideRightWidget(
-                                      newPage: ClientsOpsPage(client: client),
-                                      context: context);
-                                });
+                              onDeleted: () => onDeleteClient(client),
+                              onEdit: () {
+                                slideRightWidget(
+                                    newPage: ClientsOpsPage(client: client),
+                                    context: context);
+                              },
+                              name: client.name,
+                              customWidget: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        client.phone!,
+                                        style: const TextStyle(fontSize: 14),
+                                      ),
+                                      Text(
+                                        client.email!,
+                                        style: const TextStyle(fontSize: 14),
+                                      )
+                                    ],
+                                  ),
+                                  Text(
+                                    client.address!,
+                                    style: const TextStyle(fontSize: 14),
+                                  )
+                                ],
+                              ),
+                            );
                           }),
                     ),
                   ],
@@ -127,7 +151,7 @@ class _ClientsListPageState extends State<ClientsListPage> {
   //Deleting client
   Future<void> onDeleteClient(Client client) async {
     await sqlHelper.db!
-        .delete('customers', where: 'id =?', whereArgs: [client.id]);
+        .delete('clients', where: 'id =?', whereArgs: [client.id]);
     getClients();
   }
 }

@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 
 class ListCard extends StatelessWidget {
-  final String? name;
-  final String? description;
   Future<void> Function() onDeleted;
   void Function()? onEdit;
+  final Widget? customWidget; // For customizing elements for each page
 
+  final String? name;
+  final String? description;
   final String? phone;
   final String? address;
   final String? email;
 
   ListCard({
     super.key,
-    required this.name,
-    required this.description,
     required this.onDeleted,
     required this.onEdit,
+    required this.customWidget,
+    required this.name,
+    this.description,
     this.phone,
     this.address,
     this.email,
@@ -97,10 +99,7 @@ class ListCard extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            subtitle: Text(
-              description!,
-              style: const TextStyle(fontSize: 14),
-            ),
+            subtitle: customWidget,
             trailing: IconButton(
               onPressed: onEdit,
               icon: Icon(Icons.edit),

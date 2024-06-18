@@ -1,5 +1,5 @@
 import 'package:easy_pos_app/models/category.dart';
-import 'package:easy_pos_app/widgets/app_search_field.dart';
+import 'package:easy_pos_app/widgets/app_widgets/app_search_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:route_transitions/route_transitions.dart';
@@ -110,15 +110,19 @@ class _CategoriesListPageState extends State<CategoriesListPage> {
 
                             //caling listcard
                             return ListCard(
-                                name: category.name,
-                                description: category.description,
-                                onDeleted: () => onDeleteCategory(category),
-                                onEdit: () {
-                                  slideRightWidget(
-                                      newPage:
-                                          CategoriesOpsPage(category: category),
-                                      context: context);
-                                });
+                              onDeleted: () => onDeleteCategory(category),
+                              onEdit: () {
+                                slideRightWidget(
+                                    newPage:
+                                        CategoriesOpsPage(category: category),
+                                    context: context);
+                              },
+                              name: category.name,
+                              customWidget: Text(
+                                category.description!,
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                            );
                           }),
                     ),
                   ],

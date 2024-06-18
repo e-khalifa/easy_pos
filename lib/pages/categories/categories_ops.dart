@@ -4,8 +4,8 @@ import 'package:sqflite/sqflite.dart';
 
 import '../../helpers/sql_helper.dart';
 import '../../models/category.dart';
-import '../../widgets/app_elevated_button.dart';
-import '../../widgets/app_text_field.dart';
+import '../../widgets/app_widgets/app_elevated_button.dart';
+import '../../widgets/app_widgets/app_text_field.dart';
 
 class CategoriesOpsPage extends StatefulWidget {
   final Category? category;
@@ -44,7 +44,16 @@ class _CategoriesOpsPageState extends State<CategoriesOpsPage> {
           key: formKey,
           child: Column(
             children: [
-              AppTextField(label: 'Name', controller: nameController),
+              AppTextField(
+                label: 'Name',
+                controller: nameController,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'This Field is required';
+                  }
+                  return null;
+                },
+              ),
               const SizedBox(height: 20),
               AppTextField(
                   label: 'Description', controller: descriptionController),

@@ -20,33 +20,31 @@ class _SalesStatisticsPageState extends State<SalesStatisticsPage> {
         body: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(children: [
-            Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  border: Border.all(
-                    color: Colors.black,
-                  ),
+            DropdownButtonFormField(
+              decoration: InputDecoration(
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: Theme.of(context).primaryColor),
                 ),
-                child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                    child: DropdownButton(
-                      isExpanded: true,
-                      underline: SizedBox(),
-                      items: period.map((String item) {
-                        return DropdownMenuItem<String>(
-                          value: item,
-                          child: Text(item),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          selectedPeriod = newValue;
-                        });
-                      },
-                      value:
-                          selectedPeriod, // Set the value to the selected item
-                    )))
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(width: 2, color: Colors.grey.shade300),
+                ),
+              ),
+              isExpanded: true,
+              items: period.map((String item) {
+                return DropdownMenuItem<String>(
+                  value: item,
+                  child: Text(item),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedPeriod = newValue;
+                });
+              },
+              value: selectedPeriod, // Set the value to the selected item
+            )
           ]),
         ));
   }
