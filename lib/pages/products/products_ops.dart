@@ -25,7 +25,6 @@ class _ProductsOpsPageState extends State<ProductsOpsPage> {
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
   final priceController = TextEditingController();
-  final barcodeController = TextEditingController();
   final stockController = TextEditingController();
   final imageController = TextEditingController();
   final categoryDropdownSearchController = TextEditingController();
@@ -40,7 +39,6 @@ class _ProductsOpsPageState extends State<ProductsOpsPage> {
         nameController.text = widget.product!.name!;
         descriptionController.text = widget.product!.description!;
         priceController.text = '${widget.product?.price ?? ''}';
-        barcodeController.text = widget.product!.barcode!;
         stockController.text = '${widget.product?.stock ?? ''}';
         imageController.text = widget.product!.image!;
 
@@ -155,13 +153,6 @@ class _ProductsOpsPageState extends State<ProductsOpsPage> {
                             });
                           }),
                     ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: AppTextField(
-                        label: 'Barcode',
-                        controller: barcodeController,
-                      ),
-                    ),
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -192,7 +183,6 @@ class _ProductsOpsPageState extends State<ProductsOpsPage> {
               'description': descriptionController.text,
               'price': double.parse(priceController.text),
               'stock': int.parse(stockController.text),
-              'barcode': barcodeController.text,
               'image': imageController.text,
               'categoryId': selectedCategoryId,
               'isAvailable':
@@ -208,7 +198,6 @@ class _ProductsOpsPageState extends State<ProductsOpsPage> {
               'description': descriptionController.text,
               'price': double.parse(priceController.text),
               'stock': int.parse(stockController.text),
-              'barcode': barcodeController.text,
               'image': imageController.text,
               'categoryId': selectedCategoryId,
               'isAvailable': isAvailable == true ? 1 : 0,
@@ -224,7 +213,7 @@ class _ProductsOpsPageState extends State<ProductsOpsPage> {
             content: Text(
               widget.product == null
                   ? 'Product added Successfully!'
-                  : 'Product Updated Successfully!',
+                  : 'Changes saved! Refresh to view the updtaed products',
               textAlign: TextAlign.center,
               style: const TextStyle(color: Colors.white),
             ),

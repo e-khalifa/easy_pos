@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-class ProductCard extends StatelessWidget {
+class ProductGridViewItem extends StatelessWidget {
   final String? name;
   final String? description;
   final String? category;
@@ -12,31 +12,22 @@ class ProductCard extends StatelessWidget {
   Future<void> Function() onDeleted;
   void Function()? onEdit;
 
-  ProductCard({
-    super.key,
-    required this.name,
-    this.description,
-    required this.onDeleted,
-    required this.onEdit,
-    required this.category,
-    required this.price,
-    required this.stock,
-    this.imageUrl,
-  });
+  ProductGridViewItem(
+      {super.key,
+      required this.name,
+      this.description,
+      required this.onDeleted,
+      required this.onEdit,
+      required this.category,
+      required this.price,
+      required this.stock,
+      this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 8,
-      color: Colors.white,
+      color: const Color.fromARGB(255, 250, 250, 250),
       surfaceTintColor: Colors.white,
-      shadowColor: Colors.black.withOpacity(0.2),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5),
-      ),
-
-      // Swipe to delete
-
       child: Dismissible(
         key: Key(name!),
         onDismissed: (direction) {
@@ -92,50 +83,71 @@ class ProductCard extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.all(10),
-          child: ListTile(
-            //Only show leading if there is an image
-            leading: CachedNetworkImage(
-              imageUrl: imageUrl ?? '',
-              placeholder: (context, url) => CircularProgressIndicator(),
-              errorWidget: (context, url, error) => Icon(Icons.error),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Stack(children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: CachedNetworkImage(
+                  height: 120,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  imageUrl: imageUrl ?? '',
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(
+                      Icons.error,
+                      size: 40,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                  top: 0,
+                  right: 0,
+                  child: IconButton(
+                    icon: Icon(Icons.edit),
+                    onPressed: onEdit,
+                    color: Theme.of(context).primaryColor,
+                  )),
+            ]),
+            SizedBox(
+              height: 10,
             ),
-
-            title: Text(
+            Text(
               name!,
               style: const TextStyle(
-                fontSize: 22,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
-
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Category: $category',
-                  style: const TextStyle(fontSize: 12),
-                ),
-                Text(
-                  description!,
-                  style: const TextStyle(fontSize: 14),
-                ),
-                Divider(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Price: $price EGP'),
-                    Text('In Stock: $stock')
-                  ],
-                ),
-              ],
+            Text(
+              description!,
+              style: const TextStyle(fontSize: 13),
             ),
-
-            trailing: IconButton(
-              onPressed: onEdit,
-              icon: Icon(Icons.edit),
-              color: Theme.of(context).primaryColor,
+            SizedBox(height: description == null ? 5 : 10),
+            Text(
+              'Category: $category',
+              style: const TextStyle(fontSize: 12),
             ),
-          ),
+            Divider(
+              color: Colors.grey,
+            ),
+            Text('In Stock: $stock'),
+            SizedBox(height: 10),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Text(
+                '$price EGP',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            )
+          ]),
         ),
       ),
     );

@@ -44,7 +44,9 @@ class _ClientsListPageState extends State<ClientsListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Clients'),
+          title: const Text(
+            'Clients',
+          ),
           actions: [
             IconButton(
                 icon: const Icon(
@@ -72,6 +74,8 @@ class _ClientsListPageState extends State<ClientsListPage> {
                   children: [
                     //calling searchfield
                     AppSearchField(
+                      label: 'Search for any Client',
+
                       //if the search field is empty, nothing change
                       onSearchTextChanged: (text) async {
                         if (text.isEmpty) {

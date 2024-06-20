@@ -1,12 +1,11 @@
 import 'package:easy_pos_app/widgets/app_widgets/app_search_field.dart';
+import 'package:easy_pos_app/widgets/product_grid_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:route_transitions/route_transitions.dart';
 
 import '../../helpers/sql_helper.dart';
 import '../../models/product.dart';
-import '../../widgets/products_card.dart';
 import 'products_ops.dart';
 
 /*
@@ -16,8 +15,7 @@ Products:
         3- Category Name
         4- Price
         5- In Stock
-        6- Barcode
-        7- isAvailable
+        6- isAvailable
 */
 enum StockFilter { all, inventory, outOfStock }
 
@@ -35,6 +33,7 @@ class _ProductsListPageState extends State<ProductsListPage>
   List<Product> products = [];
   String? selectedSorting = 'Time';
   StockFilter currentFilter = StockFilter.all;
+  bool notFoundOnSearch = false;
 
   var sortingChoices = [
     'Time',
@@ -146,66 +145,102 @@ class _ProductsListPageState extends State<ProductsListPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('products'),
-          actions: [
-            IconButton(
-                icon: const Icon(
-                  Icons.add,
-                  size: 30,
-                ),
-
-                //updating getProducts function after adding or updating any product
-                onPressed: () async {
-                  var updated = await pushWidgetAwait(
-                      newPage: const ProductsOpsPage(), context: context);
-                  if (updated == true) {
-                    getProducts();
-                  }
-                }),
-          ],
-        ),
-        body: products.isEmpty
-            ? Center(
-                child: Text('No Products Found'),
-              )
-            : Column(
-                children: [
-                  Container(
-                    color: Theme.of(context).primaryColor,
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: TabBar(
-                        dividerColor: Colors.grey,
-                        controller: _tabController,
-                        unselectedLabelColor: Colors.white,
-                        labelColor: Colors.black,
-                        indicatorSize: TabBarIndicatorSize.tab,
-                        indicator: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10)),
-                          color: Colors.white,
-                        ),
-                        labelStyle: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
-                        ),
-                        tabs: [
-                          Tab(text: 'All'),
-                          Tab(text: 'Inventory'),
-                          Tab(text: 'out-of-stock')
-                        ]),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Column(children: [
-                        //calling searchfield
-                        Row(
+        appBar: products.isEmpty
+            ? notFoundOnSearch
+                ? AppBar(
+                    toolbarHeight: 124,
+                    title: Text('Products'),
+                    actions: [
+                      PopupMenuButton<String>(
+                          constraints:
+                              BoxConstraints.expand(width: 150, height: 115),
+                          surfaceTintColor: Colors.white,
+                          itemBuilder: (BuildContext context) =>
+                              <PopupMenuEntry<String>>[
+                                const PopupMenuItem<String>(
+                                  value: 'Refresh',
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 20),
+                                    child: Text('Refresh'),
+                                  ),
+                                ),
+                                const PopupMenuItem<String>(
+                                  value: 'Sort by',
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 20),
+                                    child: Text('Sort by'),
+                                  ),
+                                ),
+                              ],
+                          onSelected: (String choice) {
+                            if (choice == 'Sort by') {
+                              showMenu<String>(
+                                constraints: BoxConstraints.expand(
+                                    width: 150, height: 305),
+                                surfaceTintColor: Colors.white,
+                                context: context,
+                                position: RelativeRect.fromLTRB(
+                                    double.infinity, 0, 0, 0),
+                                items: sortingChoices.map((String item) {
+                                  return PopupMenuItem<String>(
+                                    value: item,
+                                    child: Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 20),
+                                      child: Text(item),
+                                    ),
+                                  );
+                                }).toList(),
+                              ).then((String? value) {
+                                if (value != null) {
+                                  setState(() {
+                                    selectedSorting = value;
+                                  });
+                                  getProducts(
+                                      filter: currentFilter, sort: value);
+                                }
+                              });
+                            } else if (choice == 'Refresh') {
+                              getProducts();
+                            }
+                          })
+                    ],
+                    bottom: PreferredSize(
+                        preferredSize: Size.fromHeight(kToolbarHeight),
+                        child: Column(
                           children: [
                             Container(
-                              width: 350,
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              child: TabBar(
+                                  dividerColor: Colors.grey,
+                                  controller: _tabController,
+                                  unselectedLabelColor: Colors.white,
+                                  labelColor: Colors.black,
+                                  indicatorSize: TabBarIndicatorSize.tab,
+                                  indicator: BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(10),
+                                        topRight: Radius.circular(10)),
+                                    color: Colors.white,
+                                  ),
+                                  labelStyle: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                  ),
+                                  tabs: [
+                                    Tab(text: 'All'),
+                                    Tab(text: 'Inventory'),
+                                    Tab(text: 'Out-of-Stock')
+                                  ]),
+                            ),
+                            Container(
+                              color: Colors.white,
+                              padding:
+                                  EdgeInsets.only(top: 20, right: 20, left: 20),
                               child: AppSearchField(
+                                label: 'Search for any Product',
                                 //if the search field is empty, nothing change
                                 onSearchTextChanged: (text) async {
                                   if (text.isEmpty) {
@@ -213,13 +248,12 @@ class _ProductsListPageState extends State<ProductsListPage>
                                     return;
                                   }
 
-                                  //search the data (name/desciption/barcode) for the text provided
+                                  //search the data (name/desciption) for the text provided
                                   final data = await sqlHelper.db!.rawQuery('''
-                                          SELECT * FROM products 
-                                          WHERE name LIKE '%$text%'
-                                                    OR description LIKE '%$text%'
-                                                    OR barcode LIKE '%$text%'
-                                                  ''');
+                                      SELECT * FROM products 
+                                      WHERE name LIKE '%$text%'
+                                                OR description LIKE '%$text%'
+                                              ''');
 
                                   //if anything related found, map it to a list
                                   if (data.isNotEmpty) {
@@ -229,83 +263,195 @@ class _ProductsListPageState extends State<ProductsListPage>
 
                                     //nothing found? empty list
                                   } else {
+                                    notFoundOnSearch = true;
                                     products = [];
                                   }
                                   setState(() {});
                                 },
                               ),
-                            ),
-                            SizedBox(width: 5),
-                            Expanded(
-                              child: DropdownButtonFormField(
-                                  decoration: InputDecoration(
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(
-                                          color: Colors.grey.shade300),
-                                    ),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(
-                                          color: Colors.grey.shade300),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(
-                                          color: Colors.grey.shade300),
-                                    ),
-                                  ),
-                                  style: TextStyle(fontSize: 14),
-                                  items: sortingChoices.map((String item) {
-                                    return DropdownMenuItem<String>(
-                                      value: item,
-                                      child: Text(item),
-                                    );
-                                  }).toList(),
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      selectedSorting = newValue;
-                                    });
-                                    getProducts(
-                                        filter: currentFilter, sort: newValue);
-                                  },
-                                  value:
-                                      selectedSorting // Set the value to the selected item
-                                  ),
                             )
                           ],
-                        ),
-                        const SizedBox(height: 20),
-
-                        Expanded(
-                          child: ListView.builder(
-                              itemCount: products.length,
-                              itemBuilder: (context, index) {
-                                final product = products[index];
-                                print('Product: ${product.name}');
-
-                                //calling listcard
-                                return ProductCard(
-                                    imageUrl: product.image,
-                                    name: product.name,
-                                    description: product.description,
-                                    category: product.categoryName,
-                                    stock: product.stock,
-                                    price: product.price,
-                                    onDeleted: () => onDeleteProduct(product),
-                                    onEdit: () {
-                                      slideRightWidget(
-                                          newPage:
-                                              ProductsOpsPage(product: product),
-                                          context: context);
-                                    });
-                              }),
-                        ),
-                      ]),
-                    ),
-                  ),
+                        )),
+                  )
+                : AppBar(
+                    title: const Text('products'),
+                  )
+            : AppBar(
+                toolbarHeight: 124,
+                title: Text('Products'),
+                actions: [
+                  PopupMenuButton<String>(
+                      constraints:
+                          BoxConstraints.expand(width: 150, height: 115),
+                      surfaceTintColor: Colors.white,
+                      itemBuilder: (BuildContext context) =>
+                          <PopupMenuEntry<String>>[
+                            const PopupMenuItem<String>(
+                              value: 'Refresh',
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                child: Text('Refresh'),
+                              ),
+                            ),
+                            const PopupMenuItem<String>(
+                              value: 'Sort by',
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                child: Text('Sort by'),
+                              ),
+                            ),
+                          ],
+                      onSelected: (String choice) {
+                        if (choice == 'Sort by') {
+                          showMenu<String>(
+                            constraints:
+                                BoxConstraints.expand(width: 150, height: 305),
+                            surfaceTintColor: Colors.white,
+                            context: context,
+                            position:
+                                RelativeRect.fromLTRB(double.infinity, 0, 0, 0),
+                            items: sortingChoices.map((String item) {
+                              return PopupMenuItem<String>(
+                                value: item,
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 20),
+                                  child: Text(item),
+                                ),
+                              );
+                            }).toList(),
+                          ).then((String? value) {
+                            if (value != null) {
+                              setState(() {
+                                selectedSorting = value;
+                              });
+                              getProducts(filter: currentFilter, sort: value);
+                            }
+                          });
+                        } else if (choice == 'Refresh') {
+                          getProducts();
+                        }
+                      })
                 ],
-              ));
+                bottom: PreferredSize(
+                    preferredSize: Size.fromHeight(kToolbarHeight),
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: TabBar(
+                              dividerColor: Colors.grey,
+                              controller: _tabController,
+                              unselectedLabelColor: Colors.white,
+                              labelColor: Colors.black,
+                              indicatorSize: TabBarIndicatorSize.tab,
+                              indicator: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10)),
+                                color: Colors.white,
+                              ),
+                              labelStyle: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                              ),
+                              tabs: [
+                                Tab(text: 'All'),
+                                Tab(text: 'Inventory'),
+                                Tab(text: 'Out-of-Stock')
+                              ]),
+                        ),
+                        Container(
+                          color: Colors.white,
+                          padding:
+                              EdgeInsets.only(top: 20, right: 20, left: 20),
+                          child: AppSearchField(
+                            label: 'Search for any Product',
+                            //if the search field is empty, nothing change
+                            onSearchTextChanged: (text) async {
+                              if (text.isEmpty) {
+                                getProducts();
+                                return;
+                              }
+
+                              //search the data (name/desciption) for the text provided
+                              final data = await sqlHelper.db!.rawQuery('''
+                                      SELECT * FROM products 
+                                      WHERE name LIKE '%$text%'
+                                                OR description LIKE '%$text%'
+                                              ''');
+
+                              //if anything related found, map it to a list
+                              if (data.isNotEmpty) {
+                                products = data
+                                    .map((item) => Product.fromJson(item))
+                                    .toList();
+
+                                //nothing found? empty list
+                              } else {
+                                notFoundOnSearch = true;
+                                products = [];
+                              }
+                              setState(() {});
+                            },
+                          ),
+                        )
+                      ],
+                    )),
+              ),
+        body: products.isEmpty
+            ? notFoundOnSearch
+                ? SizedBox()
+                : Center(
+                    child: Text('No Categories Found'),
+                  )
+            : Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(children: [
+                  Expanded(
+                    child: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 5,
+                          mainAxisSpacing: 5,
+                          childAspectRatio: 0.70,
+                        ),
+                        itemCount: products.length,
+                        itemBuilder: (context, index) {
+                          final product = products[index];
+                          print('Product: ${product.name}');
+
+                          //calling listcard
+                          return ProductGridViewItem(
+                              imageUrl: product.image,
+                              name: product.name,
+                              description: product.description,
+                              category: product.categoryName,
+                              stock: product.stock,
+                              price: product.price,
+                              onDeleted: () => onDeleteProduct(product),
+                              onEdit: () {
+                                slideRightWidget(
+                                    newPage: ProductsOpsPage(product: product),
+                                    context: context);
+                              });
+                        }),
+                  ),
+                ]),
+              ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          backgroundColor: Theme.of(context).primaryColor,
+          onPressed: () async {
+            var updated = await pushWidgetAwait(
+              newPage: const ProductsOpsPage(),
+              context: context,
+            );
+            if (updated == true) {
+              getProducts();
+            }
+          },
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat);
   }
 
   //Deleting product

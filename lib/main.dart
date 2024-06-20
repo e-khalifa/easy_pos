@@ -4,16 +4,6 @@ import 'package:get_it/get_it.dart';
 import 'helpers/sql_helper.dart';
 import 'pages/home.dart';
 
-/*in progress: - product list page ui
-               - the editing/updating part:
-                                         1 - it doesn't display right away
-                                         2 - some of the product fields are empty in editing form
-                                         3 - it says product saved if you checked all the required fields on product,
-                                           but there isn't categories, it just say it's added, it doesn't really add,
-                                           it should display error
-                                         4 - 
-*/
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   var sqlHelper = SqlHelper();

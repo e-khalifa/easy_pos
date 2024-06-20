@@ -72,6 +72,8 @@ class _CategoriesListPageState extends State<CategoriesListPage> {
                   children: [
                     //calling searchfield
                     AppSearchField(
+                      label: 'Search for any Category',
+
                       //if the search field is empty, nothing change
                       onSearchTextChanged: (text) async {
                         if (text.isEmpty) {

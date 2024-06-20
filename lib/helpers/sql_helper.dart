@@ -55,7 +55,6 @@ class SqlHelper {
           name TEXT NOT NULL,
           description TEXT,
           price DOUBLE NOT NULL,
-          barcode TEXT,
           isAvailable BOOLEAN,
           stock INTEGER NOT NULL,
           image TEXT NoT NULL,

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 class AppSearchField extends StatefulWidget {
+  String label;
   final ValueChanged<String> onSearchTextChanged;
 
-  const AppSearchField({super.key, required this.onSearchTextChanged});
+  AppSearchField(
+      {required this.onSearchTextChanged, required this.label, super.key});
 
   @override
   _AppSearchFieldState createState() => _AppSearchFieldState();
@@ -15,8 +17,11 @@ class _AppSearchFieldState extends State<AppSearchField> {
     return TextField(
       onChanged: widget.onSearchTextChanged,
       decoration: InputDecoration(
+        contentPadding: EdgeInsets.all(10),
         prefixIcon: const Icon(Icons.search),
-        labelText: 'Search',
+        hintText: widget.label,
+        filled: true,
+        fillColor: Colors.white,
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey.shade300),
           borderRadius: BorderRadius.circular(10),

@@ -93,10 +93,10 @@ packages:
     dependency: transitive
     description:
       name: dev_build
-      sha256: "2fa3bf81b5e92504f8d7a412df2c69b61a24ceca468466e5e777cbb59c30af96"
+      sha256: "4a4c8e3aaaaa9a7de4039dc711ee573de5612a35a4469d01ecf30e5ae74cbcfd"
       url: "https://pub.dev"
     source: hosted
-    version: "0.16.5"
+    version: "0.16.7+4"
   dropdown_button2:
     dependency: "direct main"
     description:
